@@ -1,0 +1,471 @@
+---
+
+mindmap-plugin: basic
+
+---
+
+# ICS Summary
+
+## CIA/AAA/PDR
+- CIA
+   - Confidential
+      - ข้อมูลลับ คนไม่มีสิทธิ์จะไม่รู้
+      - Encryption/Decryption
+         - Symmetric Key Cryptography
+            - DES
+            - AES
+            - Blowfish
+            - Twofish
+         - Asymmetric Key Cryptography
+            - RSA
+            - ECC
+            - DSA
+      - Man-in-The-Middle Attack
+   - Integrity
+      - ข้อมูลถูกต้อง
+      - Checksum
+      - Tools/Algorithm
+         - MD5
+         - SHA1
+         - SHA2
+         - RSA
+   - Availability
+      - ระบบทำงานถูกต้องตาม SLA
+- AAA
+   - Authentication
+      - ต้องมีสิทธิถึงจะใช้งานทรัพยากรได้
+      - What you know/What you have/ What you are
+   - Authorization
+      - ทรัพยากรต้องระบุสิทธิการเข้าถึง และให้สิทธิ์นั้นกับผู้ใช้
+      - Role-based Authentication
+         - ไม่ต้องบริหารสิทธิ์รายบุคคล
+         - 1 คนมีได้หลาย Role
+   - Accounting
+      - ตรวจสอบการทำงานได้
+      - Logging
+- PDR
+   - Prevent
+      - รู้ภัยคุกคามและวิธีป้องกัน
+   - Detect
+      - ตรวจจับภัยคุกคามและแจ้งเตือน
+   - Response
+      - เมื่อเกิดการ detect ทำการตอบสนองทันท่วงที
+
+## Network Diagram
+- Logical Diagram
+   - routing table, firewall
+- Physical Diagram
+   - connectivity
+   - Site connection/Switch network/Device connection
+
+## Network Attack
+- Terminology
+   - Threats
+      - ภัยคุกคาม
+      - สิ่งที่ทำให้ระบบทำงานไม่ตรงเป้าหมาย
+   - Vulnerability
+      - ช่องโหว่
+      - การทำงานของระบบที่ไม่พึงประสงค์ สร้างปัญหาให้ระบบ
+   - Exploit
+      - การอาศัยช่องโหว่เพื่อโจมตีระบบ
+- Malwares
+   - Worms
+   - Trojan Horses
+      - software + malware
+      - เป็นตัวนำ malware อื่น ๆ เข้า device
+   - Spyware
+      - ดักอ่าน registry, history
+   - Ransomware
+      - encrypt ข้อมูล
+   - Adware
+      - แสดงโฆษณา
+      - มักมากับ trojan
+   - Rootkits
+   - Spam
+   - Computer Virus
+- Detect/Recovery from Malware
+   - Network antivirus + PC/Server antivirus (IDS/IPS)
+   - Antivirus type
+      - Signature-base
+         - ตรวจลักษณะการทำงาน malware เช่น keyword
+      - Anomaly Detection
+         - เก็บรูปแบบการทำงานที่เป็นปกติไว้ใน system นอกจากนั้นนับเป็น virus
+         - เป็นรูปแบบที่เป็นที่นิยมเพราะอัพเดตง่าย
+- Attack
+   - Sniffer
+      - ดักการทำงาน network
+      - แก้ด้วยการใช้ VPN, Encryption service
+   - DoS
+      - Denial of Service
+      - DDoS = Distributed DoS
+      - แก้ด้วย Firewall ที่เป้น IPS ในรูปแบบ Threshold-based และใช้ Load balancer
+   - Port Scan
+      - ค้นหา service ที่รันอยู่
+      - กันด้วย stateful inspection firewall/application proxy firewall และซอฟต์แวร์เช่น Port sentry
+   - Exploit
+      - โจมตีช่องโหว่ของซอฟต์แวร์/ฮาร์ดแวร์
+      - แก้ด้วยการ patching และ upgrade version
+   - TCP Hijacking
+      - ถูกขโมยสิทธิการเชื่อมต่อ session
+   - Rogue Access Point
+      - Access Point ที่อันตรายล่อให้อุปกรณ์เชื่อมต่อแล้วดูข้อมูลที่วิ่งผ่าน
+      - กันได้โดยไม่ใช้งานฟีเจอร์ auto connection ของอุปกรณ์
+
+## Firewall and Policy
+- Header Fields
+   - MAC Address
+   - IP, ID, Offset, Fragment
+   - Port, Seq Num, Ack Num, Windows Size, Flag
+- Firewall
+   - General
+      - Network Filtering Device
+      - ป้องกัน virus ที่สื่อสารผ่าน network และมี pattern ได้
+      - Appliance firewall
+         - application ที่รันบน server
+         - policy เยอะ
+         - port น้อย, bandwidth น้อย
+      - Switch based firewall
+         - อุปกรณ์ layer 3
+         - policy ไม่มาก
+         - port เยอะ, bandwidth สูง
+      - Host-based firewall
+         - ติดตั้งใน PC อยู่แล้วเช่น windows defender firewall
+         - ต้องทราบ network policy
+         - ทำ application policy ได้ (ไม่อิง port)
+   - Types
+      - Packet filtering
+         - เช็คทีละ Packet
+         - ไม่จำ state = หลาย packet ประกอบกันเพื่อโจมตีจะจับไม่ได้
+         - ปัจจุบันใช้แค่ switch ก็ทำงานนี้ได้
+         - IP:Port, Flag, Action
+      - Stateful inspection
+         - จำสถานะของ protocol ได้
+         - ป้องกัน port scanning ได้
+         - IP:Port, protocol, state, action
+      - Application proxy
+         - ตัวกลางก่อนติดต่อกับ application
+         - ป้องกันการโจมตี layer ต่ำ ๆ ได้และกันการใช้งาน service ได้
+         - IP, App protocol, App service, action
+      - Next-generation
+         - policy ซับซ้อนกว่าเช็ค IP/Port
+         - policy ราย service ตามผู้ใช้งาน
+         - เหมาะกับบริษัทใหญ่
+         - แบ่งการใช้งานเป็น user+zone เพื่อกำหนดสิทธิการใช้
+         - ต้องใช้คู่กับ active directory service เช่น Azure AD
+   - Config
+      - default
+         - White list
+            - สิ่งในรายการนี้ใช้งานได้
+            - หากมีการ apply กฏใส่ interface ใด ๆ ก็ตาม จะปิดท้ายกฏนั้น ๆ ด้วย default deny เสมอ
+         - Black list
+            - สิ่งในรายการนี้ใช้งานไม่ได้
+      - ควรกำหนดกฏโดยเอาอันที่ match เยอะสุดขึ้นมาก่อน
+   - Firewall zone
+      - Untrusted
+         - คุมไม่ได้
+         - ไม่ทราบพฤติกรรมผู้ใช้
+      - DMZ
+         - untrusted+trust ใช้งานร่วมกัน
+      - Trust
+         - ทราบกลุ่มและพฤติกรรมผู้ใช้บงาน
+   - Design
+      - ไม่ควรใช้ firewall รุ่นเดียวกันยี่ห้อเดียวกันทั้งระบบ เพื่อป้องกันช่องโหว่ที่มีร่วมกัน
+      - Multi-leg
+         - ใช้งาน firewall >= 3 ขาขึ้นไป
+         - เชื่อมทั้ง untrusted, dmz, trusted
+         - utilization firewall สูง
+      - Firewall sandwich
+         - Firewall ตัวนอกเชื่อม untrusted, dmz
+         - Firewall ตัวในเชื่อม dmz, trusted
+         - ลด utilization ที่แต่ละ firewall ได้
+         - firewall ตัวในป้องกันหลาย ๆ trust zone ยาก
+      - Layered firewall
+         - Firewall sandwich ที่ตัวนอก + หลาย Firewall ใน trust zone
+   - Deployment
+      - Router
+         - Firewall = default gateway
+         - ทำหน้าที่ routing ให้ถูกต้องด้วย
+      - Inline
+         - Transparent Firewall
+         - Router = default gateway
+         - ไม่ได้ทำหน้าที่เป้น router โดยตรง เพียงแค่ allow/deny traffic
+
+## Network Security Tools
+- Standard
+	- ISO/IEC 20000
+	- ITIL
+		- Service Strategy
+		- Service Design
+		- Service Translation
+		- Service Operation
+	- COBIT
+		- ITIL แต่ละเอียดกว่า
+- Tools
+	- Availability: Load Balancer
+	- System Monitoring: Logger
+		- CPU, Memory, Disk utilizationS
+		- Application healtcheck
+		- Network connectivity, utilization
+	- Problem Management: Ticket
+	- Capacity Planning: Performance Monitoring
+	- IPS/IDS
+		- Types
+			- Network-based
+			- Host-based
+		- method
+			- Signature-based
+				- pattern matching
+				- มักใช้สแกนไวรัสได้
+			- Statistical Anomaly-based
+				- ใช้เยอะสุด
+				- threshold connection/request ไม่เกินกำหนด
+				- ถ้าเกิน disconnect+alert
+			- Stateful Protocol Analysis
+				- เช็คตาม protocol+ลำดับการทำงาน
+		- Installation
+			- IDS
+				- ต่อกับ Span Port mirror ของ switch/router
+				- ตรวจได้หลาย network
+				- ยับยั้งการโจมตีไม่ได้
+			- IPS
+				- inline mode
+				- ต่อก่อนเข้า router
+				- deny/allow packet
+
+## Incident Response
+- แผนรับมือเหตุฉุกเฉิน
+	- ทำเมื่อเกิดเหตุฉุกเฉิน
+	- ใช้ทำ ISO
+	- ลดผลกระทบ
+	- ทำการ revise ทุก ๆ ปี
+	- ส่วนประกอบ
+		- รายละเอียดงาน
+		- บุคลการและความสามารถ
+		- การเตรียมการก่อนเกิดเหตุ
+		- เหตุฉุกเฉิน
+			- ระบุเหตุ
+			- การดำเนินการเมื่อพบ
+			- การจัดการหลังเกิดเหตุ
+- เหตุฉุกเฉิน/ภัยพิบัติ
+	- ระบบหยุดการทำงานไหม
+	- นานแค่ไหน
+	- รุนแรง = ภัยพิบัติ
+- การรับมือเหตุฉุกเฉิน
+	- ใช้ระบบ Incident Management
+	- เตรียมพร้อมคน + กระบวนการ + เครื่องมือ + งล
+	- prioritize โดยดูจาก downtime, SLA, โอกาสทางธุรกิจ
+- บุคลากรที่มีส่วนร่วม
+	- SPA ติดตั้ง+ปรับ server
+	- DBA ทำ backup
+	- IT แก้ไวรัส
+	- HR จัดอบรม
+	- etc.
+## Web Security
+- Components
+	- Web Server
+		- ใช้ Vulnerability Scan
+	- Web App
+		- penetration testing
+	- Developer
+		- secure Programming
+- Attacking
+	- recon -> find vulnerability -> exploit
+	- Exploit
+		- การใช้ช่องโหว่เพื่อโจมตี
+		- เป็นคำอธิบายวิธีโจมตี
+		- Examples
+			- Heartbleed - OpenSSL
+			- Shellshock - Bash
+- OWASP Top 10
+	- Broken Access Control
+		- เข้าระบบได้โดยไม่ต้อง Auth
+		- เลี่ยงระบบ Access Control ได้
+	- Cryptographic Failures
+		- ไม่เข้ารหัสลับข้อมูล
+		- เข้ารหัสลับ แต่ถอดง่าย
+	- Injection
+	- Insecure Design
+		- การส่ง error ที่ให้ทราบข้อมูลบางอย่างที่อาจเปิดเผยข้อมูลระบบ
+	- Security Misconfiguration
+		- ใช้ default config เช่น password 1234
+	- Vulnerable and Outdated Components
+	- Identification and Authentication Failures
+	- Software and Data Integrity Failures
+		- รันคำสั่งโดยไม่ตรวจสอบที่มา
+		- ไม่เช็ค integrity software
+	- Security Logging and Monitoring Failures
+		- log ไม่พอ
+		- output log มากเกินไป (คล้าย insecure design)
+	- Server-Side Request Forgery
+## Wireless Network Security
+- Access Point
+	- Mode of operation
+		- Infrastructure
+			- Frame คล้าย 802.3
+			- เชื่อมต่อกับ AP
+		- Adhoc
+			- ไม่ใช้ AP
+			- คุยกับเอง + forward กันเอง
+		- การคุยกันระหว่าง 2 mode ต้องมีการเปลี่ยน addressing mode ให้เข้าใจ
+	- WiFi Channel
+		- 14 Channel ในช่วง 2.4-2.5GHz
+		- Channel ใกล้กันโอกาสกวนกันสูง
+		- Channel ที่ 1 6 11 ไม่ทับกัน (channel ละ 22MHz)
+		- 5GHz มี Channel เยอะกว่า 2.4GHz
+		- ห้ามวาง AP ที่ใช้ channel เดียวกันไว้ใกล้ ๆ กันเพราะกวนกันเอง
+- การจัดวาง AP
+	- วางให้ครอบคลุมที่สุด กันจุดอับ
+	- ระวัง channel รบกวนกัน
+		- ถ้ากวน ลดความเข้มสัญญาณ
+		- เลือกใช้ guard band
+- Network
+	- Open Network
+		- AP ประกาศ beacon frame
+		- Node ขอ Assoc Req
+		- AP ส่ง Assoc Res
+	- Closed Network
+		- Node ส่ง Probe Req
+		- AP ตอบ Probe Re
+		- Node ขอ Assoc Req
+		- AP ส่ง Assoc Res
+- User Authentication
+	- Open System Authentication
+		- ทุกคนที่ request ได้สิทธิเชื่อมต่อ
+		- ไม่มีรหัสผ่าน
+	- Shared-key Authentication
+		- มี key เพื่อ auth
+		- ดักข้อมูลได้และมีวิธีหา key ได้
+- WEP
+	- Key 40 bit
+	- RC4 Algorithm
+	- ใช้ shared key auth + encryption
+	- มี checksum ทุก message
+	- มีโอกาสถูกขโมย key ได้ถ้าพบ message ที่ key (IV) เหมือนกัน
+- Evolution of 802.11
+	- 2003
+		- WPA
+		- แก้ปัญหาเบื้องต้น WEP
+		- Patch จากอุปกรณ์ที่ใช้ WEP ได้
+	- 2004
+		- WPA2
+		- ใช้หลักการ Robust Security Network
+		- ใช้อุปกรณ์ WEP ไม่ได้แล้ว
+		- ทำตาม 802.11i ได้ทั้งหมด
+			- point-to-point
+			- auth ทุก node ป้องกัน rogue AP ได้
+	- WPA
+		- ครอบช่องโหว่ WEP
+		- เพิ่มความสามารถเข้ารหัสข้อมูลและ Authen
+		- Modes
+			- Enterprise
+				- TKIP/MIC + 802.1X/EAP
+				- auth ด้วย identity server ทำให้ใช้จากคนละ access point ก็ได้
+			- Personal
+				- TKIP/MIC + PSK
+- TKIP
+	- ครอบการทำงาน WEP
+	- ป้องกัน spoofing
+	- key แต่ละ packet ต่างกันและยาวขึ้น
+	- IV 48 Bits
+	- MIC แทน CRC
+	- upgrade จาก WEP Fireware ได้
+- AES
+	- Symmetric Key-cipher
+	- Block-size 128 bits
+	- Key 128 bits
+	- เข้ารหัส 4 ขั้น แต่ละขึ้นทำ 10 รอบ (กรณี WPA2)
+	- Protocl Couter-mode/CBC-Mac Protocol (CCMP)
+
+## IT Risk Management
+- การบริหารความเสี่ยงตามมาตรฐาน COSO
+	- Objective setting
+	- Event identification
+		- ชื่อความเสี่ยง
+		- ประเภทความเสี่ยง
+			- เทคนิค
+			- ผู้ปฏิบัติงาน
+			- ภัยพิบัติ/เหตุฉุกเฉิน
+			- การบริหาร
+		- รายละเอียด
+		- ปัจจัยเสี่ยง/สิ่งคุกคาม
+		- ผลกระทบ/ผู้รับผลกระทบ
+	- Risk assessment
+		- กำหนดรายละเอียด โอกาสเกิดเหตุ ความรุนแรง
+		- ใช้ Scenario Analysis
+	- Risk response
+		- หลีกเลี่ยง ดำเนินการไม่ให้เกิดความเสี่ยง
+		- ถ่ายโอน ให้การดำเนินการไปทำที่หน่วยงานอื่น
+		- ลด ลดความรุนแรงความเสี่ยง/ผลกระทบ
+		- ยอมรับ ยอมให้ความเสี่ยงอยู่ในระบบ อาจไม่ดำเนินการแต่ต้องตรวจสอบว่าขอบเขตยอมรับได้หรือไม่
+	- Control activities
+	- Information and communication
+	- Monitoring
+
+## Security Procedure
+- ISO 27001:2005 Annex A
+	- Security Policy
+	- Organization of Information Security
+		- มีทีมด้าน security
+		- มี CISO
+	- Asset Management
+		- ทรัพยากรอยู่ไหน ใครดูแล
+	- Human Resources Security
+		- คัดกรองบุคคลที่มีความเสี่ยงต่ำมาทำงาน
+		- train พนักงาน
+		- เพิกถอนสิทธิ์ต่าง ๆ เมื่อให้ออกจากงาน
+	- Physical and Environmental Security
+		- การควบคุมการเข้าออกพื้นที่สำคัญ
+		- การสอดส่องดูแล เช่น CCTV
+	- Communication and Operations Management
+		- การจัดการระบบต่าง ๆ 
+		- ไม่ต้องทำทุกอย่างพร้อม ๆ กัน ทำทีละอย่างก็ได้
+			- revise ทุก 2 ปี
+			- องค์กรที่มี ISO27001 นาน ๆ แสดงว่ามี security มากกว่า
+	- Access Control
+		- ใครใช้อะไรได้บ้าง เข้าถึงได้อย่างไร
+		- ครอบคลุมทั้งระบบ อุปกรณ์ และพื้นที่
+	- Information Systems Acquisition, Development, and Maintenence
+		- การจัดซื้ออุปกรณ์ต้องคำนึง security
+		- การตรวจรับ ทำโดยผู้มีความรู้
+	- Information Security Incident Management
+		- Incident/Response plan
+	- Business Continuity Management
+	- Compliance
+		- การทำตามข้อบังคับ กฏหมาย
+## Security Law
+- เริ่มช่วงปี 2000s เพราะ E-Commerce
+	- legal + safe + tracable
+	- ลดความเสี่ยงโดนแฮค
+- ในไทย
+	- ศึกษาและจัดทำร่างกฏหมาย 6 ฉบับคือ
+		- ธุรกรรมทางอิเล็กทรอนิกส์
+			- ให้ใช้เอกสารและข้อมูลดิจิตัลเป็นหลักฐานในชั้นศาลได้
+		- ลายมือชื่ออิเล็กทรอนิกส์
+			- ธุรกรรมในโลก internet ต้องรองรับได้ว่ามีตัวตนจริง เช่น e-certificate
+			- ให้เชื่อถือ CA เป็นหลักฐานในชั้นศาลได้
+			- กระทรวงพาณิชย์ให้ทุกนิติบุคคลมี CA
+		- การพัฒนาโครงสร้างพื้นฐานสารสนเทศให้ทั่วถึงและเท่าเทียมกัน
+		- การคุ้มครองข้อมูลส่วนบุคคล (ไม่ใช่ PDPA)
+			- ให้เก็บข้อมูลส่วนบุคคลด้วย policy ที่ปลอดภัยแยกต่างหากทท
+		- การกระทำความผิดเกี่ยวกับคอมพิวเตอร์ (พรบ คอม)
+		- การโอนเงินทางอิเล็กทรอนิกส์
+- ระดับกฏหมาย
+	- พรบ
+		- รัฐสภา -> king -> ราชกิจจา
+	- พรก
+		- คณะรัฐมนตรี -> king -> ประกาศบังคับ
+	- พระราชกฤษฏีกา
+		- พรบ/พรก ให้สิทธิ์รัฐมนตรี -> king -> ราชกิจจา
+	- ประกาศ
+		- หน่วยงานที่มีหน้าที่ ออกประกาศได้
+- กฏหมายสำคัญ
+	- ประกาศคณะกรรมการธุรกรรมทางอิเล็กทรอนิกส์ เรื่อง มาตรฐานการรักษาความมั่นคงปลอดภัยของระบบสารสนเทศตามวิธีการแบบปลอดภัย พ.ศ. 2555
+		- บีบให้ทำตาม ISO 27001
+	- ประกาศคณะกรรมการธุรกรรมทางอิเล็กทรอนิกส์ เรื่อง รายชื่อหน่วยงานหรือองค์กร หรือส่วนงานของหน่วยงานหรือองค์กรที่ถือเป็นโครงสร้างพื้นฐานสำคัญของประเทศซึ่งต้องกระทำตามวิธีการแบบปลอดภัยในระดับเคร่งครัด พ.ศ. 2559
+		- หน่วยงานใหญ่ต้องทำ ISO 27001 ระดับสูงสุด
+	- พรบ ว่าด้วยการกระทำความผิดเกี่ยวกับคอมพิวเตอร์ พ.ศ. 2550
+		- ป้องกันการโจมตีและลงโทษผู้กระทำผิด (ติดคุก)
+			- Spam ไม่ติดคุก ปรับไม่เกิน 100000
+			- กระทำต่อความมั่นคงเห็นเหตุให้คนตาย จำคุก 10-20 ปี (นานสุด)
+		- ก่อนที่จะมีกฏหมายนี้ การแฮคเป็นความผิดทางแพ่งที่อย่างมากก็แค่เสียค่าปรับ ซึ่งมักน้อยกว่าค่าจ้างแฮค
+		- ต้องมีผู้เสียหายออกมาแจ้งความก่อนถึงนับได้ว่ามีการทำผิดกฏหมาย (ในปี 2560 ยกเว้นกรณีภาพตัดต่อ มีความผิดทันที)
